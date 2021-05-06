@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const multer = require('multer');
-const usersController = require('../server/controllers/usersController');
-const fileUploader = require('../server/middleware/uploadMiddleware');
+const usersController = require('../app/controllers/usersController');
+const fileUploader = require('../app/middleware/uploadMiddleware');
 
 router.post(
     '/register',
