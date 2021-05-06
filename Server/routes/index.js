@@ -1,19 +1,12 @@
 const usersRouter = require('./users');
-const schoolsRouter = require('./schools');
-const reviewRouter = require('./reviews');
-const commentRouter = require('./comments');
+const newsRouter = require('./news');
 
 function router(app) {
     app.use('/api/users', usersRouter);
-
-    app.use('/api/schools', schoolsRouter);
-
-    app.use('/api/reviews', reviewRouter);
-
-    app.use('/api/comments', commentRouter);
+    app.use('/api/news', newsRouter);
 
     app.use('/', (req, res) => {
-        res.json({ message: 'success' });
+        res.json({ msg: 'API of project Family Health' });
     });
 }
 

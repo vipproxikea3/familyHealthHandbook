@@ -1,24 +1,22 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-global.blackListRT= new Set();
+const auth = (req, res, next) => {
+    try {
+        const token = req.headers['access-token'];
+        if (!token) return res.status(403).json({ msg: 'No token provided.' });
 
-const auth =(req, res, next)=>{
-  try{
-    const token = req.headers['x-access-token']
-    if(!token) return res.status(403).json({msg : "No token provided."});
+        jwt.verify(token, process.env.JWT_KEY, (err, data) => {
+            if (err) return res.status(500).json({ msg: err });
 
-    if(blackListRT.has(token))
-      return res.status(400).json({msg: "You are not login, please login."});
+            User.findById(data._id).then((user) => {
+                req.user = user;
+            });
+            next();
+        });
+    } catch (err) {
+        return res.status(500).json({ msg: err.message });
+    }
+};
 
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user)=>{
-      if(err) return res.status(500).json({msg : err})
-
-      req.user = user
-      next()
-    })
-  }catch(err){
-    return res.status(500).json({msg : err.message})
-  }
-}
-
-module.exports = auth
+module.exports = auth;
