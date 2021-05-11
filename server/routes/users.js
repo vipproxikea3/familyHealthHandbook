@@ -8,7 +8,6 @@ router.post(
     fileUploader.single('avatar'),
     usersController.register
 );
-router.use(multer().none());
 router.post('/login', usersController.login);
 router.get('/', usersController.getAll);
 
