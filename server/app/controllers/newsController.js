@@ -19,7 +19,7 @@ const newsController = {
                 result.data = result.data.concat(dataJson.data);
             }
 
-            res.json(result);
+            res.json(result.data);
         } catch (error) {
             console.error(error);
         }
