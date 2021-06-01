@@ -41,7 +41,6 @@ const userController = {
     login: async (req, res) => {
         try {
             const { email, password } = req.body;
-            console.log(req.body);
             const user = await User.findOne({ email });
             if (!user) {
                 return res
@@ -53,7 +52,12 @@ const userController = {
                     .json({ msg: 'Invalid login credentials' });
             }
             const token = await user.generateAuthToken();
-            return res.json({ user, token });
+            const check = await bcrypt.compare(password, user.password);
+            return res.json({
+                user,
+                token,
+                check,
+            });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }

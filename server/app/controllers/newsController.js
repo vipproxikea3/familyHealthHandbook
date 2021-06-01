@@ -1,68 +1,28 @@
-var request = require('request');
-var cheerio = require('cheerio');
+const axios = require('axios').default;
 
 const newsController = {
-    getBySlug: async (req, res) => {
-        const slug = req.params.slug;
-
-        request(
-            'https://vnexpress.net/suc-khoe/' + slug,
-            function (err, response, body) {
-                if (err) {
-                    return res.status(500).json({ msg: err.message });
-                } else {
-                    let listNews = [];
-                    var $ = cheerio.load(body);
-                    $('.item-news').each((index, el) => {
-                        const itemTitle = $(el).find(
-                            '.item-news .title-news a'
-                        );
-                        const itemDescription = $(el).find(
-                            '.item-news .description a'
-                        );
-                        let news = {
-                            title: itemTitle.text(),
-                            url: itemTitle.attr('href'),
-                            description: itemDescription.text(),
-                        };
-
-                        if (news.url != undefined) listNews.push(news);
-                    });
-
-                    res.json(listNews);
-                }
-            }
-        );
-    },
     getAll: async (req, res) => {
-        request(
-            'https://vnexpress.net/suc-khoe',
-            function (err, response, body) {
-                if (err) {
-                    return res.status(500).json({ msg: err.message });
-                } else {
-                    let listNews = [];
-                    var $ = cheerio.load(body);
-                    $('.item-news').each((index, el) => {
-                        const itemTitle = $(el).find(
-                            '.item-news .title-news a'
-                        );
-                        const itemDescription = $(el).find(
-                            '.item-news .description a'
-                        );
-                        let news = {
-                            title: itemTitle.text(),
-                            url: itemTitle.attr('href'),
-                            description: itemDescription.text(),
-                        };
-
-                        if (news.url != undefined) listNews.push(news);
-                    });
-
-                    res.json(listNews);
-                }
+        try {
+            var result = {
+                data: [],
+            };
+            for (var i = 1; i < 7; i++) {
+                const response = await axios.get(
+                    'https://vietnamnet.vn/jsx/loadmore/?domain=desktop&c=suc-khoe&p=' +
+                        i +
+                        '&s=15&a=2'
+                );
+                data = response.data;
+                data = data.slice(data.search('=') + 1, -1);
+                data = '{ "data":' + data + '}';
+                dataJson = JSON.parse(data);
+                result.data = result.data.concat(dataJson.data);
             }
-        );
+
+            res.json(result);
+        } catch (error) {
+            console.error(error);
+        }
     },
 };
 
