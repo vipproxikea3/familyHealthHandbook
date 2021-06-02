@@ -93,7 +93,7 @@ const userController = {
 
             var group = await Group.findById(idGroup).exec();
 
-            var members = group.member;
+            var members = group.members;
 
             if (members.indexOf(idUser) == -1)
                 return res
