@@ -73,11 +73,13 @@ const userController = {
 
             const idUser = req.user._id;
             var members = group.members;
+            console.log(idUser);
+            console.log(members.find((member) => member == idUser));
             if (members.find((member) => member == idUser) != undefined)
                 return res.status(500).json({ msg: 'User joined' });
             members.push(idUser);
             group.members = members;
-            group.save();
+            await group.save();
             return res.json({ group: group });
         } catch (err) {
             return res.status(500).json({ msg: err.message });

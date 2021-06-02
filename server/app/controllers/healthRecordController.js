@@ -25,7 +25,7 @@ const healthRecordController = {
                 images: images,
             });
 
-            healthRecord.save();
+            await healthRecord.save();
 
             return res.json({ healthRecord: healthRecord });
         } catch (err) {

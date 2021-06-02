@@ -18,7 +18,7 @@ const postController = {
                 idHealthRecord: idHealthRecord,
             });
 
-            post.save();
+            await post.save();
 
             return res.json({ post: post });
         } catch (err) {
