@@ -13,7 +13,7 @@ const HealthRecord = new Schema(
             required: true,
         },
         sickness: {
-            type: number,
+            type: String,
             required: true,
         },
         images: [

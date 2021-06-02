@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 const auth = (req, res, next) => {
     try {
-        const token = req.headers['access-token'];
+        const token = req.body['access-token'];
         if (!token) return res.status(403).json({ msg: 'No token provided.' });
 
         jwt.verify(token, process.env.JWT_KEY, (err, data) => {
@@ -11,8 +11,8 @@ const auth = (req, res, next) => {
 
             User.findById(data._id).then((user) => {
                 req.user = user;
+                next();
             });
-            next();
         });
     } catch (err) {
         return res.status(500).json({ msg: err.message });

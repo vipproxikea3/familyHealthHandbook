@@ -1,16 +1,11 @@
 const router = require('express').Router();
 const multer = require('multer');
-const healthRecordController = require('../app/controllers/healthRecordController');
+const groupController = require('../app/controllers/groupController');
 const fileUploader = require('../app/middleware/uploadMiddleware');
 const auth = require('../app/middleware/auth');
 
-router.post(
-    '/',
-    fileUploader.array('images', 10),
-    auth,
-    healthRecordController.create
-);
+router.post('/', fileUploader.single('avatar'), auth, groupController.create);
 router.use(multer().none());
-router.get('/', healthRecordController.getAll);
+router.get('/', groupController.getAll);
 
 module.exports = router;
