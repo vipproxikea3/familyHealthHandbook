@@ -85,6 +85,18 @@ const userController = {
             return res.status(500).json({ msg: err.message });
         }
     },
+    leaveGroup: async (req, res) => {
+        try {
+            const { idGroup } = req.body;
+            //const idUser = req.user._id;
+
+            var group = await Group.findById(idGroup).exec();
+
+            return res.json({ group: group });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
     getMyGroup: async (req, res) => {
         try {
             const idUser = req.user._id;
