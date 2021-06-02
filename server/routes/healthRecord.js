@@ -11,6 +11,7 @@ router.post(
     healthRecordController.create
 );
 router.use(multer().none());
+router.get('/:id', healthRecordController.getById);
 router.get('/', healthRecordController.getAll);
 
 module.exports = router;

@@ -4,6 +4,10 @@ const ObjectId = Schema.ObjectId;
 
 const Post = new Schema(
     {
+        idUser: {
+            type: String,
+            required: true,
+        },
         idGroup: {
             type: String,
             required: true,

@@ -9,6 +9,19 @@ const healthRecordController = {
             return res.status(500).json({ msg: err.message });
         }
     },
+    getById: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const healthRecord = await HealthRecord.findOne({ _id: id });
+            if (!healthRecord)
+                return res
+                    .status(500)
+                    .json({ msg: 'This health record not exist' });
+            return res.json(healthRecord);
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
     create: async (req, res) => {
         try {
             const { location, sickness } = req.body;

@@ -1,10 +1,41 @@
 const Group = require('../models/Group');
+const Post = require('../models/Post');
 
 const groupController = {
     getAll: async (req, res) => {
         try {
             const groups = await Group.find({});
             return res.json(groups);
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+    getById: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const group = await Group.findOne({ _id: id });
+            if (!group)
+                return res.status(500).json({ msg: 'This group not exist' });
+            return res.json(group);
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+    getPost: async (req, res) => {
+        try {
+            const idUser = req.query.idUser;
+            console.log(idUser);
+            const idGroup = req.params.idGroup;
+            if (!idUser || idUser == '') {
+                var posts = await Post.find({ idGroup: idGroup });
+                return res.json({ posts: posts });
+            } else {
+                var posts = await Post.find({
+                    idGroup: idGroup,
+                    idUser: idUser,
+                });
+                return res.json({ posts: posts });
+            }
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }

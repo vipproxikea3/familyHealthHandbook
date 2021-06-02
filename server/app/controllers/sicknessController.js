@@ -9,6 +9,17 @@ const sicknessController = {
             return res.status(500).json({ msg: err.message });
         }
     },
+    getById: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const sickness = await Sickness.findOne({ _id: id });
+            if (!sickness)
+                return res.status(500).json({ msg: 'This sickness not exist' });
+            return res.json(sickness);
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
     searchByName: async (req, res) => {
         try {
             let q = req.query.q;

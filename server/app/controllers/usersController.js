@@ -91,7 +91,7 @@ const userController = {
             const { idGroup } = req.body;
             const idUser = req.user._id;
 
-            var group = await Group.findById(idGroup).exec();
+            var group = await Group.findOne({ _id: idGroup });
             if (!group)
                 return res.status(500).json({ msg: 'This group not exist' });
 
@@ -103,7 +103,10 @@ const userController = {
                     .json({ msg: 'You are not in this group' });
 
             if (group.master != idUser) {
-                return res.json({ msg: 'Leave successfully' });
+                members.splice(members.indexOf(idUser), 1);
+                group.members = members;
+                await group.save();
+                return res.json({ group: group });
             }
 
             if (group.master == idUser && members.length != 1) {
@@ -112,7 +115,9 @@ const userController = {
                 });
             }
 
-            return res.json({ msg: 'Deleted group' });
+            return res
+                .status(500)
+                .json({ msg: 'You are last member in group' });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
