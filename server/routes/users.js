@@ -12,7 +12,7 @@ router.post(
 router.use(multer().none());
 router.post('/login', usersController.login);
 router.post('/join', auth, usersController.joinGroup);
-router.post('/leave', usersController.leaveGroup);
+router.post('/leave', auth, usersController.leaveGroup);
 router.get('/my-groups', auth, usersController.getMyGroup);
 router.get('/joined-groups', auth, usersController.getJoinedGroup);
 router.get('/health-records', auth, usersController.getMyHealthRecord);

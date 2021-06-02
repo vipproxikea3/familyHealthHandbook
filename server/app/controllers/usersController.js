@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Group = require('../models/Group');
 const HealthRecord = require('../models/HealthRecord');
 const bcrypt = require('bcrypt');
+const { json } = require('express');
 
 const userController = {
     getAll: async (req, res) => {
@@ -88,11 +89,28 @@ const userController = {
     leaveGroup: async (req, res) => {
         try {
             const { idGroup } = req.body;
-            //const idUser = req.user._id;
+            const idUser = req.user._id;
 
             var group = await Group.findById(idGroup).exec();
 
-            return res.json({ group: group });
+            var members = group.member;
+
+            if (members.indexOf(idUser) == -1)
+                return res
+                    .status(500)
+                    .json({ msg: 'You are not in this group' });
+
+            if (group.master != idUser) {
+                return res.json({ msg: 'Leave successfully' });
+            }
+
+            if (group.master == idUser && members.length != 1) {
+                return res.status(500).json({
+                    msg: 'You need transfer permission to another member',
+                });
+            }
+
+            return res.json({ msg: 'Deleted group' });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
