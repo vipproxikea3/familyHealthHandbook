@@ -92,6 +92,8 @@ const userController = {
             const idUser = req.user._id;
 
             var group = await Group.findById(idGroup).exec();
+            if (!group)
+                return res.status(500).json({ msg: 'This group not exist' });
 
             var members = group.members;
 
