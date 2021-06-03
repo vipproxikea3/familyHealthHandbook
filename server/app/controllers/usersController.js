@@ -13,6 +13,28 @@ const userController = {
             return res.status(500).json({ msg: err.message });
         }
     },
+    getById: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const user = await User.findOne({ _id: id });
+            if (!user)
+                return res.status(500).json({ msg: 'This user not exist' });
+            return res.json(user);
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+    getMe: async (req, res) => {
+        try {
+            const id = req.user._id;
+            const user = await User.findOne({ _id: id });
+            if (!user)
+                return res.status(500).json({ msg: 'This user not exist' });
+            return res.json(user);
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
     register: async (req, res) => {
         try {
             const { name, email, password, gender, yearOfBirth } = req.body;
