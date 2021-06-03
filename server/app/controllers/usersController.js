@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Group = require('../models/Group');
 const HealthRecord = require('../models/HealthRecord');
+const Post = require('../models/Post');
 const bcrypt = require('bcrypt');
 const { json } = require('express');
 
@@ -173,6 +174,17 @@ const userController = {
                 idUser: idUser,
             }).exec();
             return res.json({ healthRecords: healthRecords });
+        } catch (err) {
+            return res.status(500).join({ msg: err.message });
+        }
+    },
+    getMyPost: async (req, res) => {
+        try {
+            const idUser = req.user._id;
+            var posts = await Post.find({
+                idUser: idUser,
+            }).exec();
+            return res.json({ posts: posts });
         } catch (err) {
             return res.status(500).join({ msg: err.message });
         }
