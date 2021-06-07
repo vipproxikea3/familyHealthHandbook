@@ -1,5 +1,6 @@
 const Post = require('../models/Post');
 const HealthRecord = require('../models/HealthRecord');
+const { json } = require('express');
 
 const postController = {
     getAll: async (req, res) => {
@@ -38,6 +39,25 @@ const postController = {
             await post.save();
 
             return res.json({ post: post });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+    delete: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const idUser = req.user._id;
+
+            var post = await Post.findOne({ _id: id });
+            if (!post)
+                return res.status(500).json({ msg: 'This post not exist' });
+
+            if (post.idUser != idUser)
+                return res.status(500).json({
+                    msg: 'You need permission to perform this action',
+                });
+            await Post.delete(id);
+            return res.json({ msg: 'delete successfully' });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }

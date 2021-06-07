@@ -5,6 +5,7 @@ const auth = require('../app/middleware/auth');
 
 router.use(multer().none());
 router.post('/', auth, postController.create);
+router.delete('/:id', auth, postController.delete);
 router.get('/:id', postController.getById);
 router.get('/', postController.getAll);
 

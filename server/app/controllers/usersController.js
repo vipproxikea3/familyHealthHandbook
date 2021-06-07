@@ -104,7 +104,7 @@ const userController = {
             members.push(idUser);
             group.members = members;
             await group.save();
-            return res.json({ group: group });
+            return res.json(group);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
@@ -129,7 +129,7 @@ const userController = {
                 members.splice(members.indexOf(idUser), 1);
                 group.members = members;
                 await group.save();
-                return res.json({ group: group });
+                return res.json(group);
             }
 
             if (group.master == idUser && members.length != 1) {
@@ -149,7 +149,7 @@ const userController = {
         try {
             const idUser = req.user._id;
             var groups = await Group.find({ master: idUser }).exec();
-            return res.json({ groups: groups });
+            return res.json(groups);
         } catch (err) {
             return res.status(500).join({ msg: err.message });
         }
@@ -162,7 +162,7 @@ const userController = {
                 const members = group.members;
                 return members.find((member) => member == idUser) != undefined;
             });
-            return res.json({ groups: joinedGroup });
+            return res.json(joinedGroup);
         } catch (err) {
             return res.status(500).join({ msg: err.message });
         }
@@ -173,7 +173,7 @@ const userController = {
             var healthRecords = await HealthRecord.find({
                 idUser: idUser,
             }).exec();
-            return res.json({ healthRecords: healthRecords });
+            return res.json(healthRecords);
         } catch (err) {
             return res.status(500).join({ msg: err.message });
         }
@@ -184,7 +184,7 @@ const userController = {
             var posts = await Post.find({
                 idUser: idUser,
             }).exec();
-            return res.json({ posts: posts });
+            return res.json(posts);
         } catch (err) {
             return res.status(500).join({ msg: err.message });
         }
