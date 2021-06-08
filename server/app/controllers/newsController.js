@@ -6,7 +6,7 @@ const newsController = {
             var result = {
                 data: [],
             };
-            for (var i = 1; i < 7; i++) {
+            for (var i = 1; i < 2; i++) {
                 const response = await axios.get(
                     'https://vietnamnet.vn/jsx/loadmore/?domain=desktop&c=suc-khoe&p=' +
                         i +
