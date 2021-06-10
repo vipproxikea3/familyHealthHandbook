@@ -24,17 +24,16 @@ const groupController = {
     getPost: async (req, res) => {
         try {
             const idUser = req.query.idUser;
-            console.log(idUser);
             const idGroup = req.params.idGroup;
             if (!idUser || idUser == '') {
                 var posts = await Post.find({ idGroup: idGroup });
-                return res.json({ posts: posts });
+                return res.json(posts);
             } else {
                 var posts = await Post.find({
                     idGroup: idGroup,
                     idUser: idUser,
                 });
-                return res.json({ posts: posts });
+                return res.json(posts);
             }
         } catch (err) {
             return res.status(500).json({ msg: err.message });
