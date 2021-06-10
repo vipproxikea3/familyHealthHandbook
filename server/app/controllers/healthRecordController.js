@@ -65,7 +65,7 @@ const healthRecordController = {
                     msg: 'You need permission to perform this action',
                 });
             await HealthRecord.deleteOne({ _id: id });
-            await Post.deleteMany({ idHealthRecord: id });
+            await Post.deleteMany({ healthRecord: id });
             return res.json({ msg: 'delete successfully' });
         } catch (err) {
             return res.status(500).json({ msg: err.message });

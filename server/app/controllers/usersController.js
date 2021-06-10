@@ -185,7 +185,7 @@ const userController = {
                 .populate('user', 'name avatar')
                 .populate({
                     path: 'healthRecord',
-                    select: 'location createdAt',
+                    select: 'location images createdAt',
                     model: 'HealthRecord',
                     populate: { path: 'sickness', model: 'Sickness' },
                 });
