@@ -97,8 +97,6 @@ const userController = {
 
             const idUser = req.user._id;
             var members = group.members;
-            console.log(idUser);
-            console.log(members.find((member) => member == idUser));
             if (members.find((member) => member == idUser) != undefined)
                 return res.status(500).json({ msg: 'User joined' });
             members.push(idUser);
@@ -138,9 +136,9 @@ const userController = {
                 });
             }
 
-            return res
-                .status(500)
-                .json({ msg: 'You are last member in group' });
+            await Group.deleteOne({ _id: idGroup });
+
+            return res.status(500).json({ msg: 'Leave successfully' });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
@@ -183,7 +181,15 @@ const userController = {
             const idUser = req.user._id;
             var posts = await Post.find({
                 idUser: idUser,
-            }).exec();
+            })
+                .populate('user', 'name avatar')
+                .populate({
+                    path: 'healthRecord',
+                    select: 'location createdAt',
+                    model: 'HealthRecord',
+                    populate: { path: 'sickness', model: 'Sickness' },
+                });
+
             return res.json(posts);
         } catch (err) {
             return res.status(500).join({ msg: err.message });

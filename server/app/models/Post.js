@@ -5,15 +5,9 @@ const ObjectId = Schema.ObjectId;
 
 const Post = new Schema(
     {
-        idUser: {
-            type: String,
-            required: true,
-        },
+        user: { type: Schema.Types.ObjectId, ref: 'User' },
+        healthRecord: { type: Schema.Types.ObjectId, ref: 'HealthRecord' },
         idGroup: {
-            type: String,
-            required: true,
-        },
-        idHealthRecord: {
             type: String,
             required: true,
         },

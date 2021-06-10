@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongooseDelete = require('mongoose-delete');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
@@ -12,10 +13,7 @@ const HealthRecord = new Schema(
             type: String,
             required: true,
         },
-        sickness: {
-            type: String,
-            required: true,
-        },
+        sickness: { type: Schema.Types.ObjectId, ref: 'Sickness' },
         images: [
             {
                 type: String,
@@ -24,5 +22,10 @@ const HealthRecord = new Schema(
     },
     { timestamps: true, collection: 'healthRecords' }
 );
+
+HealthRecord.plugin(mongooseDelete, {
+    deletedAt: true,
+    overrideMethods: 'all',
+});
 
 module.exports = mongoose.model('HealthRecord', HealthRecord);

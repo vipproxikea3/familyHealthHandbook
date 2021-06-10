@@ -1,9 +1,13 @@
 const HealthRecord = require('../models/HealthRecord');
+const Post = require('../models/Post');
+const User = require('../models/User');
 
 const healthRecordController = {
     getAll: async (req, res) => {
         try {
-            const healthRecords = await HealthRecord.find({});
+            const healthRecords = await HealthRecord.find({}).populate(
+                'sickness'
+            );
             return res.json(healthRecords);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
@@ -41,6 +45,28 @@ const healthRecordController = {
             await healthRecord.save();
 
             return res.json({ healthRecord: healthRecord });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
+    delete: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const idUser = req.user._id;
+
+            var healthRecord = await HealthRecord.findOne({ _id: id });
+            if (!healthRecord)
+                return res
+                    .status(500)
+                    .json({ msg: 'This health record not exist' });
+
+            if (healthRecord.idUser != idUser)
+                return res.status(500).json({
+                    msg: 'You need permission to perform this action',
+                });
+            await HealthRecord.deleteOne({ _id: id });
+            await Post.deleteMany({ idHealthRecord: id });
+            return res.json({ msg: 'delete successfully' });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }

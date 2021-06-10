@@ -23,18 +23,33 @@ const groupController = {
     },
     getPost: async (req, res) => {
         try {
+            var posts = new Array();
             const idUser = req.query.idUser;
             const idGroup = req.params.idGroup;
             if (!idUser || idUser == '') {
-                var posts = await Post.find({ idGroup: idGroup });
-                return res.json(posts);
+                posts = await Post.find({ idGroup: idGroup })
+                    .populate('user', 'name avatar')
+                    .populate({
+                        path: 'healthRecord',
+                        select: 'location createdAt',
+                        model: 'HealthRecord',
+                        populate: { path: 'sickness', model: 'Sickness' },
+                    });
             } else {
-                var posts = await Post.find({
+                posts = await Post.find({
                     idGroup: idGroup,
                     idUser: idUser,
-                });
-                return res.json(posts);
+                })
+                    .populate('user', 'name avatar')
+                    .populate({
+                        path: 'healthRecord',
+                        select: 'location createdAt',
+                        model: 'HealthRecord',
+                        populate: { path: 'sickness', model: 'Sickness' },
+                    });
             }
+
+            return res.json(posts);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }

@@ -5,7 +5,14 @@ const { json } = require('express');
 const postController = {
     getAll: async (req, res) => {
         try {
-            const posts = await Post.find({});
+            const posts = await Post.find({})
+                .populate('user', 'name avatar')
+                .populate({
+                    path: 'healthRecord',
+                    select: 'location createdAt',
+                    model: 'HealthRecord',
+                    populate: { path: 'sickness', model: 'Sickness' },
+                });
             return res.json(posts);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
@@ -14,7 +21,14 @@ const postController = {
     getById: async (req, res) => {
         try {
             const id = req.params.id;
-            const post = await Post.findOne({ _id: id });
+            const post = await Post.findOne({ _id: id })
+                .populate('user', 'name avatar')
+                .populate({
+                    path: 'healthRecord',
+                    select: 'location createdAt',
+                    model: 'HealthRecord',
+                    populate: { path: 'sickness', model: 'Sickness' },
+                });
             if (!post)
                 return res.status(500).json({ msg: 'This post not exist' });
             return res.json(post);
@@ -26,14 +40,12 @@ const postController = {
         try {
             const { idGroup, idHealthRecord } = req.body;
 
-            const healthRecord = await HealthRecord.findOne({
-                _id: idHealthRecord,
-            });
+            const idUser = req.user._id;
 
             const post = new Post({
-                idUser: healthRecord.idUser,
+                user: idUser,
                 idGroup: idGroup,
-                idHealthRecord: idHealthRecord,
+                healthRecord: idHealthRecord,
             });
 
             await post.save();
@@ -56,7 +68,7 @@ const postController = {
                 return res.status(500).json({
                     msg: 'You need permission to perform this action',
                 });
-            await Post.delete(id);
+            await Post.deleteOne({ _id: id });
             return res.json({ msg: 'delete successfully' });
         } catch (err) {
             return res.status(500).json({ msg: err.message });

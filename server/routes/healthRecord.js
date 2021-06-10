@@ -11,6 +11,7 @@ router.post(
     healthRecordController.create
 );
 router.use(multer().none());
+router.delete('/:id', auth, healthRecordController.delete);
 router.get('/:id', healthRecordController.getById);
 router.get('/', healthRecordController.getAll);
 
