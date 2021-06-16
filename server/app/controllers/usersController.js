@@ -170,7 +170,7 @@ const userController = {
             const idUser = req.user._id;
             var healthRecords = await HealthRecord.find({
                 idUser: idUser,
-            }).exec();
+            }).populate('sickness', 'name');
             return res.json(healthRecords);
         } catch (err) {
             return res.status(500).join({ msg: err.message });
@@ -180,7 +180,7 @@ const userController = {
         try {
             const idUser = req.user._id;
             var posts = await Post.find({
-                idUser: idUser,
+                user: idUser,
             })
                 .populate('user', 'name avatar')
                 .populate({

@@ -16,7 +16,9 @@ const healthRecordController = {
     getById: async (req, res) => {
         try {
             const id = req.params.id;
-            const healthRecord = await HealthRecord.findOne({ _id: id });
+            const healthRecord = await HealthRecord.findOne({
+                _id: id,
+            }).populate('sickness', 'name');
             if (!healthRecord)
                 return res
                     .status(500)
