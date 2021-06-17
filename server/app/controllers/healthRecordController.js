@@ -46,7 +46,7 @@ const healthRecordController = {
 
             await healthRecord.save();
 
-            return res.json({ healthRecord: healthRecord });
+            return res.json(healthRecord);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
