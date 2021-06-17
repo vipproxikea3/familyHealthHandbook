@@ -40,27 +40,30 @@ const postController = {
         try {
             const { idGroup, idHealthRecord } = req.body;
 
-            var postCheck = Post.findOne({
-                idGroup: idGroup,
-                idHealthRecord: idHealthRecord,
-            });
+            Post.findOne(
+                {
+                    idGroup: idGroup,
+                    healthRecord: idHealthRecord,
+                },
+                (err, result) => {
+                    console.log(result);
+                    if (result != undefined || result != null)
+                        return res
+                            .status(500)
+                            .json({ msg: 'This post is exist' });
+                    const idUser = req.user._id;
 
-            if (postCheck)
-                return res.status(500).json({ msg: 'This post is exist' });
+                    const post = new Post({
+                        user: idUser,
+                        idGroup: idGroup,
+                        healthRecord: idHealthRecord,
+                    });
 
-            console.log(postCheck);
+                    post.save();
 
-            const idUser = req.user._id;
-
-            const post = new Post({
-                user: idUser,
-                idGroup: idGroup,
-                healthRecord: idHealthRecord,
-            });
-
-            await post.save();
-
-            return res.json({ post: post });
+                    return res.json({ post: post });
+                }
+            );
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
