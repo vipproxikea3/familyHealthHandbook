@@ -40,13 +40,15 @@ const postController = {
         try {
             const { idGroup, idHealthRecord } = req.body;
 
-            var postCheck = await Post.findOne({
+            var postCheck = Post.findOne({
                 idGroup: idGroup,
                 idHealthRecord: idHealthRecord,
             });
 
             if (postCheck)
                 return res.status(500).json({ msg: 'This post is exist' });
+
+            console.log(postCheck);
 
             const idUser = req.user._id;
 
