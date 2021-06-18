@@ -5,6 +5,15 @@ const Post = require('../models/Post');
 const Notification = require('../models/Notification');
 const bcrypt = require('bcrypt');
 const { json } = require('express');
+const Pusher = require('pusher');
+
+const pusher = new Pusher({
+    appId: process.env.PUSHER_APP_ID,
+    key: process.env.PUSHER_KEY,
+    secret: process.env.PUSHER_SECRET,
+    cluster: process.env.PUSHER_CLUSTER,
+    useTLS: true,
+});
 
 const userController = {
     getAll: async (req, res) => {
@@ -97,12 +106,29 @@ const userController = {
             if (!group) return res.status(500).json({ msg: 'group not exist' });
 
             const idUser = req.user._id;
+
+            var user = await User.findOne({ _id: idUser });
+
             var members = group.members;
             if (members.find((member) => member == idUser) != undefined)
                 return res.status(500).json({ msg: 'User joined' });
             members.push(idUser);
             group.members = members;
             await group.save();
+
+            const notification = new Notification({
+                user: req.user._id,
+                group: group._id,
+                action: 1,
+            });
+
+            notification.save();
+
+            pusher.trigger('group-channel', 'joinGroup-event', {
+                group: group._id,
+                message: user.name + ' vừa tham gia vào nhóm ' + group.name,
+            });
+
             return res.json(group);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
@@ -111,9 +137,10 @@ const userController = {
     leaveGroup: async (req, res) => {
         try {
             const { idGroup } = req.body;
-            const idUser = req.user._id;
-
             var group = await Group.findOne({ _id: idGroup });
+            const idUser = req.user._id;
+            var user = await User.findOne({ _id: idUser });
+
             if (!group)
                 return res.status(500).json({ msg: 'This group not exist' });
 
@@ -123,6 +150,19 @@ const userController = {
                 return res
                     .status(500)
                     .json({ msg: 'You are not in this group' });
+
+            const notification = new Notification({
+                user: req.user._id,
+                group: group._id,
+                action: 2,
+            });
+
+            notification.save();
+
+            pusher.trigger('group-channel', 'leaveGroup-event', {
+                group: idGroup,
+                message: user.name + ' vừa rời khỏi nhóm ' + group.name,
+            });
 
             if (group.master != idUser) {
                 members.splice(members.indexOf(idUser), 1);

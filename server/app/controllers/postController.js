@@ -97,6 +97,7 @@ const postController = {
             notification.save();
 
             pusher.trigger('group-channel', 'createPost-event', {
+                group: idGroup,
                 message:
                     user.name + ' vừa chia sẻ bài viết vào nhóm ' + group.name,
             });

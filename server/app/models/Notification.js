@@ -7,7 +7,7 @@ const Notification = new Schema(
     {
         user: { type: Schema.Types.ObjectId, ref: 'User' },
         group: { type: Schema.Types.ObjectId, ref: 'Group' },
-        // 0. Create post | 1. Join group
+        // 0. Create post | 1. Join group | 2. Leave group
         action: {
             type: Number,
             required: true,
