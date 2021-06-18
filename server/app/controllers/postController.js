@@ -1,6 +1,17 @@
 const Post = require('../models/Post');
 const HealthRecord = require('../models/HealthRecord');
+const Group = require('../models/Group');
+const User = require('../models/User');
 const { json } = require('express');
+const Pusher = require('pusher');
+
+const pusher = new Pusher({
+    appId: process.env.PUSHER_APP_ID,
+    key: process.env.PUSHER_KEY,
+    secret: process.env.PUSHER_SECRET,
+    cluster: process.env.PUSHER_CLUSTER,
+    useTLS: true,
+});
 
 const postController = {
     getAll: async (req, res) => {
@@ -40,30 +51,48 @@ const postController = {
         try {
             const { idGroup, idHealthRecord } = req.body;
 
-            Post.findOne(
-                {
+            let results = await Promise.all([
+                await Group.findOne({ _id: idGroup }),
+                await HealthRecord.findOne({
+                    _id: idHealthRecord,
+                }),
+                await User.findOne({ _id: req.user._id }),
+                await Post.findOne({
                     idGroup: idGroup,
                     healthRecord: idHealthRecord,
-                },
-                (err, result) => {
-                    console.log(result);
-                    if (result != undefined || result != null)
-                        return res
-                            .status(500)
-                            .json({ msg: 'This post is exist' });
-                    const idUser = req.user._id;
+                }),
+            ]);
 
-                    const post = new Post({
-                        user: idUser,
-                        idGroup: idGroup,
-                        healthRecord: idHealthRecord,
-                    });
+            let group = results[0];
+            let healthRecord = results[1];
+            let user = results[2];
+            let checkPost = results[3];
 
-                    post.save();
+            if (!group)
+                return res.status(500).json({ msg: 'This group is not exist' });
 
-                    return res.json({ post: post });
-                }
-            );
+            if (!healthRecord)
+                return res
+                    .status(500)
+                    .json({ msg: 'This health record is not exist' });
+
+            if (checkPost)
+                return res.status(500).json({ msg: 'This post is exist' });
+
+            const post = new Post({
+                user: req.user._id,
+                idGroup: idGroup,
+                healthRecord: idHealthRecord,
+            });
+
+            post.save();
+
+            pusher.trigger('post-channel', 'createPost-event', {
+                message:
+                    user.name + ' vừa chia sẻ bài viết vào nhóm ' + group.name,
+            });
+
+            return res.json({ post: post });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
