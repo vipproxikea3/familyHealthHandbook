@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Group = require('../models/Group');
 const HealthRecord = require('../models/HealthRecord');
 const Post = require('../models/Post');
+const Notification = require('../models/Notification');
 const bcrypt = require('bcrypt');
 const { json } = require('express');
 
@@ -191,6 +192,20 @@ const userController = {
                 });
 
             return res.json(posts);
+        } catch (err) {
+            return res.status(500).join({ msg: err.message });
+        }
+    },
+    getMyNotification: async (req, res) => {
+        try {
+            const idUser = req.user._id;
+            var notifications = await Notification.find({
+                user: idUser,
+            })
+                .populate('user', 'name avatar')
+                .populate('group', 'name avatar');
+
+            return res.json(notifications);
         } catch (err) {
             return res.status(500).join({ msg: err.message });
         }

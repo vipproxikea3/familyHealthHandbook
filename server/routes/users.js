@@ -17,6 +17,7 @@ router.get('/my-groups', auth, usersController.getMyGroup);
 router.get('/joined-groups', auth, usersController.getJoinedGroup);
 router.get('/health-records', auth, usersController.getMyHealthRecord);
 router.get('/posts', auth, usersController.getMyPost);
+router.get('/notifications', auth, usersController.getMyNotification);
 router.get('/me', auth, usersController.getMe);
 router.get('/:id', usersController.getById);
 router.get('/', usersController.getAll);

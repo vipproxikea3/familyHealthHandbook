@@ -5,6 +5,7 @@ const sicknessRouter = require('./sickness');
 const healthRecordsRouter = require('./healthRecord');
 const groupsRouter = require('./group');
 const postsRouter = require('./post');
+const notificationsRouter = require('./notification');
 
 function router(app) {
     app.use('/api/users', usersRouter);
@@ -14,6 +15,7 @@ function router(app) {
     app.use('/api/health-records', healthRecordsRouter);
     app.use('/api/groups', groupsRouter);
     app.use('/api/posts', postsRouter);
+    app.use('/api/notifications', notificationsRouter);
 
     app.use('/', (req, res) => {
         res.json({ msg: 'API of project Family Health' });

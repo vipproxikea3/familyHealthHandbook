@@ -2,6 +2,7 @@ const Post = require('../models/Post');
 const HealthRecord = require('../models/HealthRecord');
 const Group = require('../models/Group');
 const User = require('../models/User');
+const Notification = require('../models/Notification');
 const { json } = require('express');
 const Pusher = require('pusher');
 
@@ -87,7 +88,15 @@ const postController = {
 
             post.save();
 
-            pusher.trigger('post-channel', 'createPost-event', {
+            const notification = new Notification({
+                user: req.user._id,
+                group: idGroup,
+                action: 0,
+            });
+
+            notification.save();
+
+            pusher.trigger('group-channel', 'createPost-event', {
                 message:
                     user.name + ' vừa chia sẻ bài viết vào nhóm ' + group.name,
             });
