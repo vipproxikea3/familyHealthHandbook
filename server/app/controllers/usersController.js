@@ -98,6 +98,22 @@ const userController = {
             return res.status(500).json({ msg: err.message });
         }
     },
+    update: async (req, res) => {
+        try {
+            const { name, gender, yearOfBirth } = req.body;
+            var user = await User.findOne({ _id: req.user._id });
+            user.name = name;
+            user.gender = gender;
+            user.yearOfBirth = yearOfBirth;
+            if (req.file) user.avatar = req.file.path;
+
+            await user.save();
+
+            return res.json({ user });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
     joinGroup: async (req, res) => {
         try {
             const { inviteCode } = req.body;

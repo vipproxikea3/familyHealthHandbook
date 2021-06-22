@@ -9,6 +9,12 @@ router.post(
     fileUploader.single('avatar'),
     usersController.register
 );
+router.put(
+    '/update',
+    auth,
+    fileUploader.single('avatar'),
+    usersController.update
+);
 router.use(multer().none());
 router.post('/login', usersController.login);
 router.post('/join', auth, usersController.joinGroup);

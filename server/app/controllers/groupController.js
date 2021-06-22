@@ -79,6 +79,25 @@ const groupController = {
             return res.status(500).json({ msg: err.message });
         }
     },
+    update: async (req, res) => {
+        try {
+            const { idGroup, name, description } = req.body;
+            var group = await Group.findOne({ _id: idGroup });
+            if (group.master != req.user._id)
+                res.status(500).json({
+                    msg: 'You need permission to perform this action',
+                });
+            group.name = name;
+            group.description = description;
+            if (req.file) group.avatar = req.file.path;
+
+            await group.save();
+
+            return res.json({ group });
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
     kick: async (req, res) => {
         try {
             const { idGroup, idUser } = req.body;
