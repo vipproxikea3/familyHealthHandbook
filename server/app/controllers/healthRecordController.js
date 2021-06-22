@@ -46,7 +46,11 @@ const healthRecordController = {
 
             await healthRecord.save();
 
-            return res.json(healthRecord);
+            const newHealthRecord = await HealthRecord.findOne({
+                _id: healthRecord._id,
+            }).populate('sickness', 'name');
+
+            return res.json(newHealthRecord);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
