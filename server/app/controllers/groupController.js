@@ -74,7 +74,7 @@ const groupController = {
 
             await group.save();
 
-            return res.json({ group: group });
+            return res.json({ group });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
