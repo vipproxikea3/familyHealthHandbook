@@ -82,17 +82,17 @@ const userController = {
                 return res
                     .status(400)
                     .json({ msg: 'Invalid login credentials' });
-            } else if (!bcrypt.compare(password, user.password)) {
+            }
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
                 return res
                     .status(400)
                     .json({ msg: 'Invalid login credentials' });
             }
             const token = await user.generateAuthToken();
-            const check = await bcrypt.compare(password, user.password);
             return res.json({
                 user,
                 token,
-                check,
             });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
