@@ -15,6 +15,7 @@ router.use(multer().none());
 router.post('/kick', auth, groupController.kick);
 router.post('/transfer-permission', auth, groupController.transferPermission);
 router.get('/:idGroup/posts', groupController.getPost);
+router.get('/:idGroup/members', groupController.getMember);
 router.get('/:id', groupController.getById);
 router.get('/', groupController.getAll);
 

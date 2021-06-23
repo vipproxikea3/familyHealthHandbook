@@ -25,11 +25,7 @@ const Group = new Schema(
             unique: true,
             default: shortid.generate,
         },
-        members: [
-            {
-                type: String,
-            },
-        ],
+        members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     },
     { timestamps: true, collection: 'groups' }
 );

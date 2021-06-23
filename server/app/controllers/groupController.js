@@ -21,6 +21,18 @@ const groupController = {
             return res.status(500).json({ msg: err.message });
         }
     },
+    getMember: async (req, res) => {
+        try {
+            const id = req.params.idGroup;
+            const group = await Group.findById(id).populate(
+                'members',
+                'name avatar'
+            );
+            return res.json(group.members);
+        } catch (err) {
+            return res.status(500).json({ msg: err.message });
+        }
+    },
     getPost: async (req, res) => {
         try {
             var posts = new Array();
