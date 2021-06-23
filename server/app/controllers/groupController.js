@@ -74,7 +74,7 @@ const groupController = {
 
             await group.save();
 
-            return res.json({ group });
+            return res.json(group);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
@@ -93,7 +93,7 @@ const groupController = {
 
             await group.save();
 
-            return res.json({ group });
+            return res.json(group);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
@@ -119,7 +119,7 @@ const groupController = {
             members.splice(members.indexOf(idUser), 1);
             group.members = members;
             await group.save();
-            return res.json({ group: group });
+            return res.json(group);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
@@ -139,7 +139,7 @@ const groupController = {
                 return res.status(500).json({ msg: 'You are master already' });
             group.master = idUser;
             await group.save();
-            return res.json({ group: group });
+            return res.json(group);
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
