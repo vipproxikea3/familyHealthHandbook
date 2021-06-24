@@ -195,7 +195,7 @@ const userController = {
 
             await Group.deleteOne({ _id: idGroup });
 
-            return res.status(500).json({ msg: 'Leave successfully' });
+            return res.json({ msg: 'Leave successfully' });
         } catch (err) {
             return res.status(500).json({ msg: err.message });
         }
