@@ -77,30 +77,32 @@ const postController = {
                     .status(500)
                     .json({ msg: 'This health record is not exist' });
 
-            if (checkPost)
-                return res.status(500).json({ msg: 'This post is exist' });
+            // if (checkPost)
+            //     return res.status(500).json({ msg: 'This post is exist' });
 
-            const post = new Post({
-                user: req.user._id,
-                idGroup: idGroup,
-                healthRecord: idHealthRecord,
-            });
+            // const post = new Post({
+            //     user: req.user._id,
+            //     idGroup: idGroup,
+            //     healthRecord: idHealthRecord,
+            // });
 
-            post.save();
+            // post.save();
 
-            const notification = new Notification({
-                user: req.user._id,
-                group: idGroup,
-                action: 0,
-            });
+            // const notification = new Notification({
+            //     user: req.user._id,
+            //     group: idGroup,
+            //     action: 0,
+            // });
 
-            notification.save();
+            // notification.save();
 
             pusher.trigger('group-channel', 'createPost-event', {
-                group: idGroup,
                 type: 0,
-                message:
-                    user.name + ' vừa chia sẻ bài viết vào nhóm ' + group.name,
+                information: {
+                    user: user,
+                    group: group,
+                    action: 0,
+                },
             });
 
             return res.json({ post: post });
