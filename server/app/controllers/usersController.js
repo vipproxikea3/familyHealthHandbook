@@ -258,37 +258,41 @@ const userController = {
             return res.status(500).join({ msg: err.message });
         }
     },
-    // getMyNotification: async (req, res) => {
-    //     try {
-    //         const idUser = req.user._id;
-    //         var groups = await Group.find({});
-    //         var joinedGroup = groups.filter((group) => {
-    //             const members = group.members;
-    //             return members.find((member) => member == idUser) != undefined;
-    //         });
-    //         var notifications = await Notification.find({
-    //             user: { $ne: idUser },
-    //             group: { $in: joinedGroup },
-    //         })
-    //             .sort({ createdAt: -1 })
-    //             .populate('user', 'name avatar')
-    //             .populate('group', 'name avatar');
+    getMyNotification: async (req, res) => {
+        try {
+            const idUser = req.user._id;
+            let groups = await Group.find({});
+            let joinedGroup = groups.filter((group) => {
+                const members = group.members;
+                return (
+                    members.find(
+                        (member) => String(member) == String(idUser)
+                    ) != undefined
+                );
+            });
+            var notifications = await Notification.find({
+                user: { $ne: idUser },
+                group: { $in: joinedGroup },
+            })
+                .sort({ createdAt: -1 })
+                .populate('user', 'name avatar')
+                .populate('group', 'name avatar');
 
-    //         // const newNotifications = notifications.filter((item) => {
-    //         //     if (
-    //         //         joinedGroup.find((element) => {
-    //         //             return element == item.group._id;
-    //         //         }) != undefined &&
-    //         //         item.user._id != idUser
-    //         //     )
-    //         //         return true;
-    //         // });
+            // const newNotifications = notifications.filter((item) => {
+            //     if (
+            //         joinedGroup.find((element) => {
+            //             return element == item.group._id;
+            //         }) != undefined &&
+            //         item.user._id != idUser
+            //     )
+            //         return true;
+            // });
 
-    //         return res.json(notifications);
-    //     } catch (err) {
-    //         return res.status(500).join({ msg: err.message });
-    //     }
-    // },
+            return res.json(notifications);
+        } catch (err) {
+            return res.status(500).join({ msg: err.message });
+        }
+    },
     // helpMe: async (req, res) => {
     //     const user = User.findById(req.user._id);
     // },
