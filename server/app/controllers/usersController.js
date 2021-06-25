@@ -141,9 +141,12 @@ const userController = {
             notification.save();
 
             pusher.trigger('group-channel', 'joinGroup-event', {
-                group: group._id,
                 type: 0,
-                message: user.name + ' vừa tham gia vào nhóm ' + group.name,
+                information: {
+                    user: user,
+                    group: group,
+                    action: 1,
+                },
             });
 
             return res.json(group);
@@ -177,9 +180,12 @@ const userController = {
             notification.save();
 
             pusher.trigger('group-channel', 'leaveGroup-event', {
-                group: idGroup,
                 type: 0,
-                message: user.name + ' vừa rời khỏi nhóm ' + group.name,
+                information: {
+                    user: user,
+                    group: group,
+                    action: 2,
+                },
             });
 
             if (group.master != idUser) {
