@@ -310,9 +310,7 @@ const userController = {
                 console.log(group.members);
                 for (let i = 0; i < group.members.length; i++) {
                     members.push(group.members[i]);
-                    console.log(group.members[i]);
                 }
-                console.log(members);
             });
 
             pusher.trigger('group-channel', 'sos-event', {
