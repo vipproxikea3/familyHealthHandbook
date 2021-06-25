@@ -284,24 +284,50 @@ const userController = {
                 .populate('user', 'name avatar')
                 .populate('group', 'name avatar');
 
-            // const newNotifications = notifications.filter((item) => {
-            //     if (
-            //         joinedGroup.find((element) => {
-            //             return element == item.group._id;
-            //         }) != undefined &&
-            //         item.user._id != idUser
-            //     )
-            //         return true;
-            // });
-
             return res.json(notifications);
         } catch (err) {
             return res.status(500).join({ msg: err.message });
         }
     },
-    // helpMe: async (req, res) => {
-    //     const user = User.findById(req.user._id);
-    // },
+    helpMe: async (req, res) => {
+        try {
+            const idUser = req.user._id;
+            let groups = await Group.find({});
+            let joinedGroup = groups.filter((group) => {
+                const members = group.members;
+                return (
+                    members.find(
+                        (member) => String(member) == String(idUser)
+                    ) != undefined
+                );
+            });
+
+            const user = await User.findOne({ _id: idUser });
+
+            let members = [];
+
+            joinedGroup.forEach((group) => {
+                console.log(group.members);
+                for (let i = 0; i < group.members.length; i++) {
+                    members.push(group.members[i]);
+                    console.log(group.members[i]);
+                }
+                console.log(members);
+            });
+
+            pusher.trigger('group-channel', 'sos-event', {
+                type: 1,
+                information: {
+                    user: user,
+                    members: members,
+                },
+            });
+
+            return res.json({ msg: 'success' });
+        } catch (err) {
+            return res.status(500).join({ msg: err.message });
+        }
+    },
 };
 
 module.exports = userController;
