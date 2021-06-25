@@ -12,4 +12,4 @@
 2. Nguyễn Đình Long - 18521032
 ## Mô tả
 * **Back-end** Do sinh viên Đồng Quang Quý thực hiện, mã nguồn ở trang github này
-* **Front-end** Do sinh viên Nguyễn Đình Long thực hiện, mã nguồn ở link github ...
+* **Front-end** Do sinh viên Nguyễn Đình Long thực hiện, mã nguồn ở link github https://github.com/LongVeipe/FamilyHealthHandbBook
