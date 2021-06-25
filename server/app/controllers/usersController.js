@@ -142,6 +142,7 @@ const userController = {
 
             pusher.trigger('group-channel', 'joinGroup-event', {
                 group: group._id,
+                type: 0,
                 message: user.name + ' vừa tham gia vào nhóm ' + group.name,
             });
 
@@ -177,6 +178,7 @@ const userController = {
 
             pusher.trigger('group-channel', 'leaveGroup-event', {
                 group: idGroup,
+                type: 0,
                 message: user.name + ' vừa rời khỏi nhóm ' + group.name,
             });
 
@@ -266,6 +268,9 @@ const userController = {
             return res.status(500).join({ msg: err.message });
         }
     },
+    // helpMe: async (req, res) => {
+    //     const user = User.findById(req.user._id);
+    // },
 };
 
 module.exports = userController;
